@@ -1,4 +1,5 @@
-
+## 🧑‍💻 Description 
+ A small application demonstrating authentication using code generation.
 
 ## 🧑‍💻 Development
 
