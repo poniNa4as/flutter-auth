@@ -1,16 +1,27 @@
-# auth_clean_arch
 
-A new Flutter project.
 
-## Getting Started
+## 🧑‍💻 Development
 
-This project is a starting point for a Flutter application.
+To run the project locally:
 
-A few resources to get you started if this is your first Flutter project:
+1. Clone the repository:
+    ```bash
+    git clone https://github.com/poniNa4as/flutter-auth.git
+    ```
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+2. Install dependencies:
+    ```bash
+    flutter pub get
+    ```
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+3. Run the app:
+    ```bash
+    flutter run
+    ```
+
+## 🤝 For Test 
+
+ ```bash
+    Email: test@test.com
+    password : 123456
+    ```
