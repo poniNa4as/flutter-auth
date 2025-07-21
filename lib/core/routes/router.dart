@@ -25,7 +25,7 @@ final GoRouter goRouter = GoRouter(
     GoRoute(
       path: '/home',
       builder: (context, state)  {
-        final email = state.extra as String;
+       final email = state.extra is String ? state.extra as String : null;
         return HomeScreen(email: email);
       }
     ),

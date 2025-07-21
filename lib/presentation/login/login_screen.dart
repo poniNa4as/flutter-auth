@@ -32,6 +32,8 @@ class _LoginFormState extends State<LoginForm> {
 
   int _lastErrorId = -1;
 
+  bool _obscure = true;
+
   @override
   void initState() {
     super.initState();
@@ -63,14 +65,16 @@ class _LoginFormState extends State<LoginForm> {
     final cubit = context.read<LoginCubit>();
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Login')),
-      body: Padding(
-        padding: const EdgeInsets.all(16),
+    backgroundColor: const Color(0xFFF5F5F5),
+    body: Center(
+      child: SingleChildScrollView(
+        padding: const EdgeInsets.all(24),
         child: BlocConsumer<LoginCubit, LoginState>(
           listener: (context, state) {
             if (state.isSuccess) {
               context.go('/home', extra: state.email);
-            } else if (state.error.isNotEmpty && state.errorId != _lastErrorId) {
+            } else if (state.error.isNotEmpty &&
+                state.errorId != _lastErrorId) {
               _lastErrorId = state.errorId;
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(content: Text('Wrong email or password')),
@@ -78,50 +82,97 @@ class _LoginFormState extends State<LoginForm> {
             }
           },
           builder: (context, state) {
-            return Form(
-              child: Column(
-                children: [
-                  TextFormField(
-                    focusNode: _emailFocusNode,
-                    decoration: InputDecoration(
-                      labelText: 'Email',
-                      errorText: _emailTouched && !state.isEmailValid
-                          ? 'Invalid email'
-                          : null,
-                    ),
-                    onChanged: cubit.emailChanged,
+            return Center(
+              child: Container(
+                width: 400,
+                padding: const EdgeInsets.all(24),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(16),
+                  boxShadow: const [
+                    BoxShadow(
+                      color: Colors.black12,
+                      blurRadius: 12,
+                      offset: Offset(0, 8),
+                    )
+                  ],
+                ),
+                child: Form(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      TextFormField(
+                        focusNode: _emailFocusNode,
+                        decoration: InputDecoration(
+                          labelText: 'Email',
+                          border: const OutlineInputBorder(),
+                          errorText: _emailTouched && !state.isEmailValid
+                              ? 'Invalid email'
+                              : null,
+                        ),
+                        onChanged: cubit.emailChanged,
+                      ),
+                      const SizedBox(height: 16),
+                      TextFormField(
+                        focusNode: _passwordFocusNode,
+                        obscureText: _obscure,
+                        decoration: InputDecoration(
+                          labelText: 'Password',
+                          border: const OutlineInputBorder(),
+                          errorText: _passwordTouched && !state.isPasswordValid
+                              ? 'Password too short'
+                              : null,
+                          suffixIcon: IconButton(
+                            icon: Icon(
+                              _obscure
+                                  ? Icons.visibility_off
+                                  : Icons.visibility,
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                _obscure = !_obscure;
+                              });
+                            },
+                          ),
+                        ),
+                        onChanged: cubit.passwordChanged,
+                      ),
+                      const SizedBox(height: 24),
+                      SizedBox(
+                        width: double.infinity,
+                        height: 48,
+                        child: ElevatedButton(
+                          onPressed: state.isValid && !state.isLoading
+                              ? cubit.submit
+                              : null,
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.black,
+                            foregroundColor: Colors.white,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                          ),
+                          child: state.isLoading
+                              ? const SizedBox(
+                                  width: 20,
+                                  height: 20,
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2,
+                                    color: Colors.white,
+                                  ),
+                                )
+                              : const Text('Login'),
+                        ),
+                      ),
+                    ],
                   ),
-                  TextFormField(
-                    focusNode: _passwordFocusNode,
-                    decoration: InputDecoration(
-                      labelText: 'Password',
-                      errorText: _passwordTouched && !state.isPasswordValid
-                          ? 'Password too short'
-                          : null,
-                    ),
-                    obscureText: true,
-                    onChanged: cubit.passwordChanged,
-                  ),
-                  const SizedBox(height: 20),
-                  ElevatedButton(
-                    onPressed: state.isValid && !state.isLoading
-                        ? cubit.submit
-                        : null,
-                    child: state.isLoading
-                        ? const SizedBox(
-                            width: 20,
-                            height: 20,
-                            child: CircularProgressIndicator(strokeWidth: 2),
-                          )
-                        : const Text('Login'),
-                  ),
-                ],
+                ),
               ),
             );
           },
         ),
       ),
-    );
+    ),
+  );
   }
 }
-
