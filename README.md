@@ -24,4 +24,3 @@ To run the project locally:
  ```bash
     Email: test@test.com
     password : 123456
-    ```
