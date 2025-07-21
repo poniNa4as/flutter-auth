@@ -54,7 +54,7 @@ dev_dependencies:
   freezed: ^2.4.6
   json_serializable: ^6.7.1
   injectable_generator: ^2.4.1
-  retrofit_generator: ^8.0.5
+  retrofit_generator: ^8.1.5
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is

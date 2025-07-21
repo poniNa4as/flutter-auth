@@ -24,6 +24,8 @@ class LoginState extends Equatable {
       );
 
   bool get isValid => email.contains('@') && password.length >= 6;
+  bool get isEmailValid => email.contains('@');
+  bool get isPasswordValid => password.length >=6;
 
   LoginState copyWith({
     String? email,

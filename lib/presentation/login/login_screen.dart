@@ -16,8 +16,47 @@ class LoginScreen extends StatelessWidget {
   }
 }
 
-class LoginForm extends StatelessWidget {
+class LoginForm extends StatefulWidget {
   const LoginForm({super.key});
+
+  @override
+  State<LoginForm> createState() => _LoginFormState();
+}
+
+class _LoginFormState extends State<LoginForm> {
+  late FocusNode _emailFocusNode;
+  late FocusNode _passwordFocusNode;
+
+  bool _emailTouched = false;
+  bool _passwordTouched = false;
+
+  String _lastError = ''; // Добавили
+
+  @override
+  void initState() {
+    super.initState();
+    _emailFocusNode = FocusNode();
+    _passwordFocusNode = FocusNode();
+
+    _emailFocusNode.addListener(() {
+      if (!_emailFocusNode.hasFocus) {
+        setState(() => _emailTouched = true);
+      }
+    });
+
+    _passwordFocusNode.addListener(() {
+      if (!_passwordFocusNode.hasFocus) {
+        setState(() => _passwordTouched = true);
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _emailFocusNode.dispose();
+    _passwordFocusNode.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +70,8 @@ class LoginForm extends StatelessWidget {
           listener: (context, state) {
             if (state.isSuccess) {
               context.go('/home');
-            } else if (state.error.isNotEmpty) {
+            } else if (state.error.isNotEmpty && state.error != _lastError) {
+              _lastError = state.error;
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(content: Text(state.error)),
               );
@@ -42,11 +82,23 @@ class LoginForm extends StatelessWidget {
               child: Column(
                 children: [
                   TextFormField(
-                    decoration: const InputDecoration(labelText: 'Email'),
+                    focusNode: _emailFocusNode,
+                    decoration: InputDecoration(
+                      labelText: 'Email',
+                      errorText: _emailTouched && !state.isEmailValid
+                          ? 'Invalid email'
+                          : null,
+                    ),
                     onChanged: cubit.emailChanged,
                   ),
                   TextFormField(
-                    decoration: const InputDecoration(labelText: 'Password'),
+                    focusNode: _passwordFocusNode,
+                    decoration: InputDecoration(
+                      labelText: 'Password',
+                      errorText: _passwordTouched && !state.isPasswordValid
+                          ? 'Password too short'
+                          : null,
+                    ),
                     obscureText: true,
                     onChanged: cubit.passwordChanged,
                   ),
