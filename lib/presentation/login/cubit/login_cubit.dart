@@ -13,8 +13,7 @@ class LoginCubit extends Cubit<LoginState> {
 
   void emailChanged(String value) => emit(state.copyWith(email: value));
 
-  void passwordChanged(String value) =>
-      emit(state.copyWith(password: value));
+  void passwordChanged(String value) => emit(state.copyWith(password: value));
 
   Future<void> submit() async {
     if (!state.isValid) return;
@@ -25,7 +24,14 @@ class LoginCubit extends Cubit<LoginState> {
       await _loginUseCase(state.email, state.password);
       emit(state.copyWith(isSuccess: true));
     } catch (e) {
-      emit(state.copyWith(error: e.toString()));
+      emit(
+        state.copyWith(
+          error: e.toString(),
+          errorId:
+              state.errorId +
+              1, 
+        ),
+      );
     } finally {
       emit(state.copyWith(isLoading: false));
     }

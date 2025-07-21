@@ -30,7 +30,7 @@ class _LoginFormState extends State<LoginForm> {
   bool _emailTouched = false;
   bool _passwordTouched = false;
 
-  String _lastError = ''; // Добавили
+  int _lastErrorId = -1;
 
   @override
   void initState() {
@@ -69,11 +69,11 @@ class _LoginFormState extends State<LoginForm> {
         child: BlocConsumer<LoginCubit, LoginState>(
           listener: (context, state) {
             if (state.isSuccess) {
-              context.go('/home');
-            } else if (state.error.isNotEmpty && state.error != _lastError) {
-              _lastError = state.error;
+              context.go('/home', extra: state.email);
+            } else if (state.error.isNotEmpty && state.errorId != _lastErrorId) {
+              _lastErrorId = state.errorId;
               ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text(state.error)),
+                const SnackBar(content: Text('Wrong email or password')),
               );
             }
           },
@@ -108,7 +108,11 @@ class _LoginFormState extends State<LoginForm> {
                         ? cubit.submit
                         : null,
                     child: state.isLoading
-                        ? const CircularProgressIndicator()
+                        ? const SizedBox(
+                            width: 20,
+                            height: 20,
+                            child: CircularProgressIndicator(strokeWidth: 2),
+                          )
                         : const Text('Login'),
                   ),
                 ],
@@ -120,3 +124,4 @@ class _LoginFormState extends State<LoginForm> {
     );
   }
 }
+

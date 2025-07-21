@@ -6,6 +6,7 @@ class LoginState extends Equatable {
   final bool isLoading;
   final bool isSuccess;
   final String error;
+  final int errorId; 
 
   const LoginState({
     required this.email,
@@ -13,6 +14,7 @@ class LoginState extends Equatable {
     required this.isLoading,
     required this.isSuccess,
     required this.error,
+    required this.errorId, 
   });
 
   factory LoginState.initial() => const LoginState(
@@ -21,11 +23,12 @@ class LoginState extends Equatable {
         isLoading: false,
         isSuccess: false,
         error: '',
+        errorId: 0, 
       );
 
   bool get isValid => email.contains('@') && password.length >= 6;
   bool get isEmailValid => email.contains('@');
-  bool get isPasswordValid => password.length >=6;
+  bool get isPasswordValid => password.length >= 6;
 
   LoginState copyWith({
     String? email,
@@ -33,6 +36,7 @@ class LoginState extends Equatable {
     bool? isLoading,
     bool? isSuccess,
     String? error,
+    int? errorId,
   }) {
     return LoginState(
       email: email ?? this.email,
@@ -40,9 +44,10 @@ class LoginState extends Equatable {
       isLoading: isLoading ?? this.isLoading,
       isSuccess: isSuccess ?? this.isSuccess,
       error: error ?? this.error,
+      errorId: errorId ?? this.errorId,
     );
   }
 
   @override
-  List<Object?> get props => [email, password, isLoading, isSuccess, error];
+  List<Object?> get props => [email, password, isLoading, isSuccess, error, errorId];
 }
